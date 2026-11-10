@@ -21,4 +21,4 @@ Documentation placeholder only; no application or database configuration is impl
 - Verify startup, the hello response, OpenAPI and discovery registration; commit from your own account.
 - Every member contributes at least one personal commit to MS7. Selim leads the skeleton and presents the service.
 
-See the [project overview](../../README.md) and [project context](../../WATTWISE_CONTEXT.md) for the full agreed design.
+See the [project overview](../../README.md) for the agreed architecture, technologies and team responsibilities.

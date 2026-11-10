@@ -6,7 +6,7 @@ WattWise TN helps households understand electricity use, estimate STEG bills, mo
 
 An ESPRIT **Distributed Web Applications (AWD / MT-41)** project · **4DAS** · **2026–2027** · Dr. Badia Bouhdid.
 
-> **Current status — Session 4, Intermediate Validation 1:** repository organization and documentation placeholders. Application projects, databases, infrastructure and business endpoints are not implemented by this scaffold. The target design below follows [WATTWISE_CONTEXT.md](WATTWISE_CONTEXT.md).
+> **Current status — Session 4, Intermediate Validation 1:** repository organization and documentation placeholders. Application projects, databases, infrastructure and business endpoints are not implemented by this scaffold.
 
 ## Who uses it?
 
@@ -21,7 +21,6 @@ For example, a household records meter readings, sees an estimated bill, tracks 
 ```text
 AWD/
 ├── README.md
-├── WATTWISE_CONTEXT.md
 ├── docker-compose.yml              # Explicit placeholder; infrastructure pending
 ├── Documentation/
 │   ├── Technical-Document/
@@ -104,7 +103,7 @@ Keycloak, RabbitMQ and database connection ports are to be configured in the inf
 | MS5 → MS2, MS3 | Retrieve consumption history and solar data |
 | MS7 → MS1, MS2, MS3 | Retrieve report data |
 
-When MS1 is unavailable, MS2 refuses unvalidated readings with 503 or marks them pending validation; MS3 rejects new installations with 503 while existing reads remain available. MS5 falls back to generic recommendations using the household appliance profile; MS7 falls back to a stored environmental baseline when MS2 is unavailable. MS4 and MS6 have no synchronous business dependencies. Detailed contracts and failure behavior remain in the project context.
+When MS1 is unavailable, MS2 refuses unvalidated readings with 503 or marks them pending validation; MS3 rejects new installations with 503 while existing reads remain available. MS5 falls back to generic recommendations using the household appliance profile; MS7 falls back to a stored environmental baseline when MS2 is unavailable. MS4 and MS6 have no synchronous business dependencies.
 
 ### Asynchronous communication
 
@@ -157,7 +156,7 @@ git clone https://github.com/mahdibenmansour/AWD.git
 cd AWD
 ```
 
-Read the [project context](WATTWISE_CONTEXT.md) and your service README before implementing. There is currently no runnable application; the Compose file contains no services.
+Read this overview and your service README before implementing. There is currently no runnable application; the Compose file contains no services.
 
 ### Implementation handoff
 
@@ -199,7 +198,7 @@ For each service, implement **only a basic working example**, not business logic
 - The project compiles/starts with its own database configuration.
 - The owner contributes a personal commit and can explain entities, endpoints/status codes, interactions and dependency failures.
 
-Business APIs use the `/api/v1` prefix. The full agreed endpoints, entities and event names are preserved in [WATTWISE_CONTEXT.md](WATTWISE_CONTEXT.md).
+Business APIs use the `/api/v1` prefix. Each service owner will document detailed endpoints, entities and event contracts in their service documentation.
 
 ## Documentation and milestones
 
@@ -217,7 +216,7 @@ Business APIs use the `/api/v1` prefix. The full agreed endpoints, entities and 
 | S9 | Keycloak security |
 | S10 | Docker deployment, frontend integration and final demo |
 
-The schedule is provisional. Prototype FastAPI/Eureka/RabbitMQ integration early, protect synchronous dependencies, coordinate container configuration and review personal contributions regularly. Environmental factors need documented sources and validity dates; the context's 0.45 kg CO₂e/kWh is a provisional design default, not a verified official factor.
+The schedule is provisional. Prototype FastAPI/Eureka/RabbitMQ integration early, protect synchronous dependencies, coordinate container configuration and review personal contributions regularly. Environmental factors need documented sources and validity dates; the proposed 0.45 kg CO₂e/kWh is a provisional design default, not a verified official factor.
 
 ## Collaboration
 

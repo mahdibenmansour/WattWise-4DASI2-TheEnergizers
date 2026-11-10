@@ -21,4 +21,4 @@ Documentation placeholder only; no application or database configuration is impl
 - Document API contracts, events and dependency failure behavior before adding business logic.
 - Verify startup, the hello response, OpenAPI and discovery registration; commit from your own account.
 
-See the [project overview](../../README.md) and [project context](../../WATTWISE_CONTEXT.md) for the full agreed design.
+See the [project overview](../../README.md) for the agreed architecture, technologies and team responsibilities.

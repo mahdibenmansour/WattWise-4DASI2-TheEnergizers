@@ -1,5 +1,5 @@
 # WattWise TN — infrastructure placeholder, owned by Farouk.
 # Add PostgreSQL, MySQL, MongoDB, RabbitMQ, Keycloak and application containers.
-# Preserve one dedicated database per service; see README.md and WATTWISE_CONTEXT.md.
+# Preserve one dedicated database per service; see README.md.
 # This file does not start any infrastructure yet.
 services: {}
