@@ -4,7 +4,7 @@ Carbon footprint, avoided emissions without double counting, community statistic
 
 | Setting | Agreed value |
 |---|---|
-| Owner | Whole team (presented by Selim) |
+| Owner | Yesmina |
 | Service name | `ms7-environmental-service` |
 | Port | 8087 |
 | Technology | Python / FastAPI |
@@ -19,6 +19,6 @@ Documentation placeholder only; no application or database configuration is impl
 - Register with Eureka (:8761), use Config Server (:8888) where applicable, and configure the assigned database.
 - Document API contracts, events and dependency failure behavior before adding business logic.
 - Verify startup, the hello response, OpenAPI and discovery registration; commit from your own account.
-- Every member contributes at least one personal commit to MS7. Selim leads the skeleton and presents the service.
+- Yesmina owns the skeleton, implementation and presentation of MS7. Every member also contributes to shared MS1.
 
 See the [project overview](../../README.md) for the agreed architecture, technologies and team responsibilities.

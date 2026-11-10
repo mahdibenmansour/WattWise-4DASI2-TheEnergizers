@@ -50,17 +50,17 @@ Each backend folder has a concise handoff README. Empty diagram folders contain 
 
 ## Seven business microservices
 
-Six students own one Spring Boot service each. MS7 is a shared FastAPI service; the gateway, discovery and configuration components are infrastructure and do not count toward the seven.
+MS1 Household Management is shared by the whole team. Ryma, Farouk, Arfaoui, Selim and Mahdi own MS2–MS6 respectively; Yesmina owns MS7 Environmental Impact in FastAPI. The gateway, discovery and configuration components are infrastructure and do not count toward the seven.
 
 | Service / folder | Owner | Port | Dedicated database | Responsibility |
 |---|---|---|---|---|
-| [MS1 Household Management](Backend/ms1-household-service/) | Yesmina | 8081 | PostgreSQL `household_db` | Households, members, electricity meters, appliances and household energy profiles. |
+| [MS1 Household Management](Backend/ms1-household-service/) | Whole team | 8081 | PostgreSQL `household_db` | Households, members, electricity meters, appliances and household energy profiles. |
 | [MS2 Consumption & Bills](Backend/ms2-consumption-service/) | Ryma | 8082 | MySQL `consumption_db` | Meter readings, consumption history, STEG bill estimates and forecasts. |
 | [MS3 Solar Management](Backend/ms3-solar-service/) | Farouk | 8083 | PostgreSQL `solar_db` | Solar installations, panels, production, self-consumption, exports and estimated savings. |
 | [MS4 Challenges & Rewards](Backend/ms4-challenge-service/) | Arfaoui | 8084 | MongoDB `challenge_db` | Energy-saving challenges, participation, progress, points, badges and leaderboards. |
 | [MS5 Smart Optimization](Backend/ms5-optimization-service/) | Selim | 8085 | MongoDB `optimization_db` | Consumption analysis, anomalies, efficiency scores, personalized recommendations, simulations and saving plans. |
 | [MS6 Outage Analysis](Backend/ms6-outage-service/) | Mahdi | 8086 | MongoDB `outage_db` | GPS outage reports, incident clustering and area reliability metrics. |
-| [MS7 Environmental Impact](Backend/ms7-environmental-service/) | Whole team (presented by Selim) | 8087 | PostgreSQL `environmental_db` | Carbon footprint, avoided emissions without double counting, community statistics and sustainability reports. |
+| [MS7 Environmental Impact](Backend/ms7-environmental-service/) | Yesmina | 8087 | PostgreSQL `environmental_db` | Carbon footprint, avoided emissions without double counting, community statistics and sustainability reports. |
 
 **One database per service, never shared.** Services exchange identifiers and API responses or domain events; they do not query another service's tables or collections.
 
@@ -136,14 +136,14 @@ Consumers can process queued events after recovery. Durable queues, acknowledgem
 
 | Member | Individual service | Shared responsibility |
 |---|---|---|
-| Yesmina | MS1 Household | Problem statement, actors and use cases |
+| Yesmina | MS7 Environmental Impact | Problem statement, actors and use cases; shared MS1 |
 | Ryma | MS2 Consumption | Decomposition and Angular frontend setup |
 | Farouk | MS3 Solar | Gateway, Eureka, Config, Docker Compose and architecture diagram |
 | Arfaoui | MS4 Challenges | Class diagrams and technical document assembly |
-| Selim | MS5 Optimization | Sync/async communication, MS7 lead and presentation |
+| Selim | MS5 Optimization | Sync/async communication; shared MS1 |
 | Mahdi | MS6 Outage | Git repository, README, planning board and Blackboard submission |
 
-Every member must make **at least one personal commit to MS7**, in addition to their own service commits. These scaffold commits do not replace individual implementation contributions. Each student presents their own service; Selim presents shared MS7.
+Every member must make **at least one personal commit to shared MS1**, in addition to their own service commits. These scaffold commits do not replace individual implementation contributions. Each student presents their own service; Yesmina presents MS7. The team coordinates the shared MS1 presentation.
 
 ## Getting started
 
@@ -161,8 +161,8 @@ Read this overview and your service README before implementing. There is current
 ### Implementation handoff
 
 1. Farouk implements Eureka, the gateway, Git-backed Config Server and Compose infrastructure with all seven isolated databases.
-2. Each owner creates their Java 17 / Spring Boot 3.3.x Maven project using the exact folder/service name, port and database above.
-3. Selim initializes MS7 in FastAPI with Uvicorn, OpenAPI and Eureka registration; every member contributes.
+2. The team creates shared MS1, and the owners of MS2–MS6 create their Java 17 / Spring Boot 3.3.x Maven projects using the exact folder/service names, ports and databases above.
+3. Yesmina initializes MS7 in FastAPI with Uvicorn, OpenAPI and Eureka registration; every member contributes to shared MS1.
 4. Ryma initializes Angular under `Frontend/web`, with feature modules aligned to the seven domains.
 5. Owners document and verify their service before adding later-session business logic.
 
@@ -220,6 +220,6 @@ The schedule is provisional. Prototype FastAPI/Eureka/RabbitMQ integration early
 
 ## Collaboration
 
-Pull the latest changes before starting. Work in your assigned service folder; coordinate changes to shared infrastructure, documentation and MS7. Use your own GitHub account and clear messages such as `feat(ms2): add hello endpoint`. Prefer focused branches and reviewed changes.
+Pull the latest changes before starting. Work in your assigned service folder; coordinate changes to shared infrastructure, documentation and MS1. Use your own GitHub account and clear messages such as `feat(ms2): add hello endpoint`. Prefer focused branches and reviewed changes.
 
 Still to complete: group number, planning-board link, teacher collaborator access, runnable projects, infrastructure, presentation exports and diagrams. Teacher access is a team setup task and has not been changed by this scaffold.
