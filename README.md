@@ -152,7 +152,7 @@ Every member must make **at least one personal commit to shared MS1**, in additi
 Clone and inspect the repository:
 
 ```bash
-git clone https://github.com/mahdibenmansour/AWD.git
+git clone https://github.com/mahdibenmansour/WattWise-4DASI2-TheEnergizers.git AWD
 cd AWD
 ```
 
@@ -202,7 +202,7 @@ Business APIs use the `/api/v1` prefix. Each service owner will document detaile
 
 ## Documentation and milestones
 
-- [Technical document](Documentation/Technical-Document/): topic, actors, decomposition, entities, communication, architecture, technologies, responsibilities, schedule and risks.
+- [Service ownership and technical document guide](Documentation/Technical-Document/): topic, actors, decomposition, entities, communication, architecture, technologies, responsibilities, schedule and risks.
 - [Diagrams](Documentation/Diagrams/): global architecture, use cases, seven class diagrams and sequence diagrams.
 - [Presentation](Documentation/Presentation/): Session 4 PPTX/PDF, 10–15 minutes plus questions.
 - Blackboard package: repository link, technical document, presentation and architecture diagram.
