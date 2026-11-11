@@ -2,7 +2,7 @@
 
 **Smart & sustainable energy platform for Tunisian households.**
 
-WattWise TN helps households understand electricity use, estimate STEG bills, monitor rooftop solar, reduce waste, join saving challenges, report outages and measure environmental impact. It connects practical household decisions with environmental protection in Tunisia.
+WattWise TN helps households understand electricity use, estimate STEG bills, monitor rooftop solar, reduce waste, join saving challenges, report power cuts and access an energy marketplace. It connects practical household decisions with environmental protection in Tunisia.
 
 An ESPRIT **Distributed Web Applications (AWD / MT-41)** project · **4DAS** · **2026–2027** · Dr. Badia Bouhdid.
 
@@ -10,11 +10,11 @@ An ESPRIT **Distributed Web Applications (AWD / MT-41)** project · **4DAS** · 
 
 ## Who uses it?
 
-- **Household Owner:** manages the household, members, meters, appliances, readings, solar installations, saving plans and sustainability reports.
-- **Household Member:** views consumption, joins challenges, reports outages and views community sustainability.
-- **Administrator:** manages platform settings and emission factors and oversees data integrity.
+- **Household Owner:** manages the household, members, meters, appliances, readings, solar installations, saving plans and energy marketplace listings.
+- **Household Member:** views consumption, joins challenges, reports power cuts and browses energy marketplace listings.
+- **Administrator:** manages platform settings, moderates marketplace listings and oversees data integrity.
 
-For example, a household records meter readings, sees an estimated bill, tracks solar production and joins a saving challenge. Its environmental report explains avoided emissions while preventing double counting between reduced grid consumption and solar self-consumption. Billing and carbon outputs are estimates, with assumptions and data sources to be documented.
+For example, a household records meter readings, sees an estimated bill, tracks solar production and joins a saving challenge. The household can also browse or publish energy marketplace listings. Billing outputs are estimates, with assumptions and data sources to be documented.
 
 ## Repository structure
 
@@ -43,28 +43,28 @@ AWD/
     ├── ms4-challenge-service/
     ├── ms5-optimization-service/
     ├── ms6-outage-service/
-    └── ms7-environmental-service/
+    └── ms7-marketplace-service/
 ```
 
 Each backend folder has a concise handoff README. Empty diagram folders contain `.gitkeep`; actual images, presentation exports and the technical document still need to be supplied.
 
 ## Seven business microservices
 
-MS1 Household Management is shared by the whole team. Ryma, Farouk, Arfaoui, Selim and Mahdi own MS2–MS6 respectively; Yesmina owns MS7 Environmental Impact in FastAPI. The gateway, discovery and configuration components are infrastructure and do not count toward the seven.
+MS1 User, Household & Meter Management is shared by the team. Ryma, Farouk, Yassine Arfaoui, Selim and Yasmine own MS2–MS6 respectively; Mahdi owns MS7 Energy Marketplace in Python / FastAPI. The gateway, discovery and configuration components are infrastructure and do not count toward the seven.
 
 | Service / folder | Owner | Port | Dedicated database | Responsibility |
 |---|---|---|---|---|
-| [MS1 Household Management](Backend/ms1-household-service/) | Whole team | 8081 | PostgreSQL `household_db` | Households, members, electricity meters, appliances and household energy profiles. |
+| [MS1 User, Household & Meter Management](Backend/ms1-household-service/) | Shared by the team | 8081 | PostgreSQL `household_db` | Households, members, electricity meters, appliances and household energy profiles. |
 | [MS2 Consumption & Bills](Backend/ms2-consumption-service/) | Ryma | 8082 | MySQL `consumption_db` | Meter readings, consumption history, STEG bill estimates and forecasts. |
 | [MS3 Solar Management](Backend/ms3-solar-service/) | Farouk | 8083 | PostgreSQL `solar_db` | Solar installations, panels, production, self-consumption, exports and estimated savings. |
-| [MS4 Challenges & Rewards](Backend/ms4-challenge-service/) | Arfaoui | 8084 | MongoDB `challenge_db` | Energy-saving challenges, participation, progress, points, badges and leaderboards. |
+| [MS4 Challenges & Rewards](Backend/ms4-challenge-service/) | Yassine Arfaoui | 8084 | MongoDB `challenge_db` | Energy-saving challenges, participation, progress, points, badges and leaderboards. |
 | [MS5 Smart Optimization](Backend/ms5-optimization-service/) | Selim | 8085 | MongoDB `optimization_db` | Consumption analysis, anomalies, efficiency scores, personalized recommendations, simulations and saving plans. |
-| [MS6 Outage Analysis](Backend/ms6-outage-service/) | Mahdi | 8086 | MongoDB `outage_db` | GPS outage reports, incident clustering and area reliability metrics. |
-| [MS7 Environmental Impact](Backend/ms7-environmental-service/) | Yesmina | 8087 | PostgreSQL `environmental_db` | Carbon footprint, avoided emissions without double counting, community statistics and sustainability reports. |
+| [MS6 Power Cut Reporting](Backend/ms6-outage-service/) | Yasmine | 8086 | MongoDB `outage_db` | GPS outage reports, incident clustering and area reliability metrics. |
+| [MS7 Energy Marketplace](Backend/ms7-marketplace-service/) | Mahdi | 8087 | PostgreSQL `marketplace_db` | Energy marketplace listings, offers and household exchanges. |
 
 **One database per service, never shared.** Services exchange identifiers and API responses or domain events; they do not query another service's tables or collections.
 
-PostgreSQL supports MS1's household relationships and integrity, MS3's relational solar data and precise numeric values, and MS7's monthly reporting. MySQL supports transactional readings and tiered billing in MS2. MongoDB supports flexible challenge/recommendation documents in MS4–MS5 and GeoJSON/2dsphere outage queries in MS6.
+PostgreSQL supports MS1's household relationships and integrity, MS3's relational solar data and precise numeric values, and MS7's relational marketplace listings and offers. MySQL supports transactional readings and tiered billing in MS2. MongoDB supports flexible challenge/recommendation documents in MS4–MS5 and GeoJSON/2dsphere outage queries in MS6.
 
 ## Target architecture
 
@@ -75,7 +75,7 @@ flowchart TB
     G --> S["MS1–MS6 · Spring Boot :8081–8086"]
     G --> P["MS7 · FastAPI :8087"]
     S --> D["Six separate service databases"]
-    P --> E["environmental_db · PostgreSQL"]
+    P --> E["marketplace_db · PostgreSQL"]
     S <--> R["RabbitMQ domain events"]
     R --> P
     S -. "register / discover" .-> U["Eureka :8761"]
@@ -101,17 +101,17 @@ Keycloak, RabbitMQ and database connection ports are to be configured in the inf
 | MS2 → MS1 | Validate meter ownership |
 | MS3 → MS1 | Validate household existence |
 | MS5 → MS2, MS3 | Retrieve consumption history and solar data |
-| MS7 → MS1, MS2, MS3 | Retrieve report data |
+| MS7 → MS1 | Validate household ownership of marketplace listings |
 
-When MS1 is unavailable, MS2 refuses unvalidated readings with 503 or marks them pending validation; MS3 rejects new installations with 503 while existing reads remain available. MS5 falls back to generic recommendations using the household appliance profile; MS7 falls back to a stored environmental baseline when MS2 is unavailable. MS4 and MS6 have no synchronous business dependencies.
+When MS1 is unavailable, MS2 refuses unvalidated readings with 503 or marks them pending validation; MS3 rejects new installations with 503 while existing reads remain available. MS5 falls back to generic recommendations using the household appliance profile; MS7 rejects listing creation with 503 when household ownership cannot be validated by MS1. MS4 and MS6 have no synchronous business dependencies.
 
 ### Asynchronous communication
 
 | Event | Publisher | Consumer / purpose |
 |---|---|---|
 | `ApplianceAdded` | MS1 | MS5: refresh profile |
-| `ConsumptionCalculated` | MS2 | MS4: challenge progress; MS7: emissions |
-| `SolarProductionRecorded` | MS3 | MS7: avoided emissions |
+| `ConsumptionCalculated` | MS2 | MS4: challenge progress |
+| `MarketplaceListingPublished` | MS7 | Community notifications in later sessions |
 | `OutageIncidentUpdated` | MS6 | Community alerts in later sessions |
 
 Consumers can process queued events after recovery. Durable queues, acknowledgements, retries and duplicate handling must be configured during implementation.
@@ -136,14 +136,14 @@ Consumers can process queued events after recovery. Durable queues, acknowledgem
 
 | Member | Individual service | Shared responsibility |
 |---|---|---|
-| Yesmina | MS7 Environmental Impact | Problem statement, actors and use cases; shared MS1 |
+| Yasmine | MS6 Power Cut Reporting | Problem statement, actors and use cases; shared MS1 |
 | Ryma | MS2 Consumption | Decomposition and Angular frontend setup |
 | Farouk | MS3 Solar | Gateway, Eureka, Config, Docker Compose and architecture diagram |
-| Arfaoui | MS4 Challenges | Class diagrams and technical document assembly |
+| Yassine Arfaoui | MS4 Challenges | Class diagrams and technical document assembly |
 | Selim | MS5 Optimization | Sync/async communication; shared MS1 |
-| Mahdi | MS6 Outage | Git repository, README, planning board and Blackboard submission |
+| Mahdi | MS7 Energy Marketplace | Git repository, README, planning board and Blackboard submission |
 
-Every member must make **at least one personal commit to shared MS1**, in addition to their own service commits. These scaffold commits do not replace individual implementation contributions. Each student presents their own service; Yesmina presents MS7. The team coordinates the shared MS1 presentation.
+Every member must make **at least one personal commit to shared MS1**, in addition to their own service commits. These scaffold commits do not replace individual implementation contributions. Each student presents their own service; Mahdi presents MS7 Energy Marketplace; Yasmine presents MS6 Power Cut Reporting. The team coordinates the shared MS1 presentation.
 
 ## Getting started
 
@@ -162,7 +162,7 @@ Read this overview and your service README before implementing. There is current
 
 1. Farouk implements Eureka, the gateway, Git-backed Config Server and Compose infrastructure with all seven isolated databases.
 2. The team creates shared MS1, and the owners of MS2–MS6 create their Java 17 / Spring Boot 3.3.x Maven projects using the exact folder/service names, ports and databases above.
-3. Yesmina initializes MS7 in FastAPI with Uvicorn, OpenAPI and Eureka registration; every member contributes to shared MS1.
+3. Mahdi initializes MS7 in FastAPI with Uvicorn, OpenAPI and Eureka registration; every member contributes to shared MS1.
 4. Ryma initializes Angular under `Frontend/web`, with feature modules aligned to the seven domains.
 5. Owners document and verify their service before adding later-session business logic.
 
@@ -177,7 +177,7 @@ docker compose up -d
 # Each Java project, after its pom.xml exists:
 mvn spring-boot:run
 
-# Backend/ms7-environmental-service, after requirements.txt and main.py exist:
+# Backend/ms7-marketplace-service, after requirements.txt and main.py exist:
 python -m pip install -r requirements.txt
 python -m uvicorn main:app --port 8087 --reload
 
@@ -216,7 +216,7 @@ Business APIs use the `/api/v1` prefix. Each service owner will document detaile
 | S9 | Keycloak security |
 | S10 | Docker deployment, frontend integration and final demo |
 
-The schedule is provisional. Prototype FastAPI/Eureka/RabbitMQ integration early, protect synchronous dependencies, coordinate container configuration and review personal contributions regularly. Environmental factors need documented sources and validity dates; the proposed 0.45 kg CO₂e/kWh is a provisional design default, not a verified official factor.
+The schedule is provisional. Prototype FastAPI/Eureka/RabbitMQ integration early, protect synchronous dependencies, coordinate container configuration and review personal contributions regularly. Marketplace rules and listing/offer contracts must be documented before implementation.
 
 ## Collaboration
 

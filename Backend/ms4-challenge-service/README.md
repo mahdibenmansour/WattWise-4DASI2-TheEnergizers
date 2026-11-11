@@ -4,7 +4,7 @@ Energy-saving challenges, participation, progress, points, badges and leaderboar
 
 | Setting | Agreed value |
 |---|---|
-| Owner | Arfaoui |
+| Owner | Yassine Arfaoui |
 | Service name | `ms4-challenge-service` |
 | Port | 8084 |
 | Technology | Java 17 / Spring Boot 3.3.x / Maven |

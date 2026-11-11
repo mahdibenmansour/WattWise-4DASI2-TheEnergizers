@@ -1,10 +1,10 @@
-# MS6 — Outage Analysis
+# MS6 — Power Cut Reporting
 
 GPS outage reports, incident clustering and area reliability metrics.
 
 | Setting | Agreed value |
 |---|---|
-| Owner | Mahdi |
+| Owner | Yasmine |
 | Service name | `ms6-outage-service` |
 | Port | 8086 |
 | Technology | Java 17 / Spring Boot 3.3.x / Maven |

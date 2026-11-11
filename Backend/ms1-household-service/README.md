@@ -1,10 +1,10 @@
-# MS1 — Household Management
+# MS1 — User, Household & Meter Management
 
 Households, members, electricity meters, appliances and household energy profiles.
 
 | Setting | Agreed value |
 |---|---|
-| Owner | Whole team |
+| Owner | Shared by the team |
 | Service name | `ms1-household-service` |
 | Port | 8081 |
 | Technology | Java 17 / Spring Boot 3.3.x / Maven |
