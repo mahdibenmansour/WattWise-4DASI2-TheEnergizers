@@ -1,0 +1,298 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="ms7" name="MS7 Energy Marketplace">
+    <mxGraphModel dx="1835" dy="1158" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=0;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=17;fontStyle=1;labelBackgroundColor=none;" value="MS7 - Energy Marketplace&#xa;WattWise TN - Domain Class Diagram" vertex="1">
+          <mxGeometry height="48" width="690" x="440" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="discovery" parent="1" style="fontFamily=Arial;fontSize=12;swimlane;horizontal=1;startSize=30;rounded=1;arcSize=8;swimlaneFillColor=#EAF5EE;fontStyle=1;collapsible=0;container=1;labelBackgroundColor=none;" value="Professional Discovery" vertex="1">
+          <mxGeometry height="496" width="650" x="505" y="79" as="geometry" />
+        </mxCell>
+        <mxCell id="profile" parent="discovery" style="fontFamily=Arial;fontSize=12;swimlane;horizontal=1;startSize=30;swimlaneFillColor=#FAFAFA;rounded=1;arcSize=6;collapsible=0;container=1;fontStyle=1;labelBackgroundColor=none;" value="C  ProfessionalProfile" vertex="1">
+          <mxGeometry height="263" width="245" x="265" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="profile_attributes" parent="profile" style="fontFamily=Arial;fontSize=12;strokeColor=#555555;text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=7;spacingTop=4;whiteSpace=wrap;overflow=hidden;connectable=0;labelBackgroundColor=none;" value="+ profileId: Integer&#xa;+ ownerUserId: String&#xa;+ name: String&#xa;+ type: ProfessionalType&#xa;+ description: String&#xa;+ phone: String&#xa;+ city: String&#xa;+ governorate: String&#xa;+ latitude: Decimal&#xa;+ longitude: Decimal&#xa;+ serviceRadiusKm: Integer&#xa;+ status: VerificationStatus&#xa;+ createdAt: DateTime" vertex="1">
+          <mxGeometry height="232" width="245" y="31" as="geometry" />
+        </mxCell>
+        <mxCell id="category" parent="discovery" style="fontFamily=Arial;fontSize=12;swimlane;horizontal=1;startSize=30;swimlaneFillColor=#FAFAFA;rounded=1;arcSize=6;collapsible=0;container=1;fontStyle=1;labelBackgroundColor=none;" value="C  ServiceCategory" vertex="1">
+          <mxGeometry height="93" width="180" x="20" y="361" as="geometry" />
+        </mxCell>
+        <mxCell id="category_attributes" parent="category" style="fontFamily=Arial;fontSize=12;strokeColor=#555555;text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=7;spacingTop=4;whiteSpace=wrap;overflow=hidden;connectable=0;labelBackgroundColor=none;" value="+ categoryId: Integer&#xa;+ name: String&#xa;+ description: String" vertex="1">
+          <mxGeometry height="62" width="180" y="31" as="geometry" />
+        </mxCell>
+        <mxCell id="photo" parent="discovery" style="fontFamily=Arial;fontSize=12;swimlane;horizontal=1;startSize=30;swimlaneFillColor=#FAFAFA;rounded=1;arcSize=6;collapsible=0;container=1;fontStyle=1;labelBackgroundColor=none;" value="C  ProfilePhoto" vertex="1">
+          <mxGeometry height="93" width="170" x="225" y="361" as="geometry" />
+        </mxCell>
+        <mxCell id="photo_attributes" parent="photo" style="fontFamily=Arial;fontSize=12;strokeColor=#555555;text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=7;spacingTop=4;whiteSpace=wrap;overflow=hidden;connectable=0;labelBackgroundColor=none;" value="+ photoId: Integer&#xa;+ imageUrl: String&#xa;+ position: Integer" vertex="1">
+          <mxGeometry height="62" width="170" y="31" as="geometry" />
+        </mxCell>
+        <mxCell id="verification" parent="discovery" style="fontFamily=Arial;fontSize=12;swimlane;horizontal=1;startSize=30;swimlaneFillColor=#FAFAFA;rounded=1;arcSize=6;collapsible=0;container=1;fontStyle=1;labelBackgroundColor=none;" value="C  VerificationRecord" vertex="1">
+          <mxGeometry height="127" width="215" x="425" y="358" as="geometry" />
+        </mxCell>
+        <mxCell id="verification_attributes" parent="verification" style="fontFamily=Arial;fontSize=12;strokeColor=#555555;text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=7;spacingTop=4;whiteSpace=wrap;overflow=hidden;connectable=0;labelBackgroundColor=none;" value="+ verificationId: Integer&#xa;+ adminUserId: String&#xa;+ decision: VerificationStatus&#xa;+ reason: String&#xa;+ createdAt: DateTime" vertex="1">
+          <mxGeometry height="96" width="215" y="31" as="geometry" />
+        </mxCell>
+        <mxCell id="messaging" parent="1" style="fontFamily=Arial;fontSize=12;swimlane;horizontal=1;startSize=30;rounded=1;arcSize=8;swimlaneFillColor=#EAF1FF;fontStyle=1;collapsible=0;container=1;labelBackgroundColor=none;" value="Swiping and Messaging" vertex="1">
+          <mxGeometry height="430" width="420" x="30" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="conversation" parent="messaging" style="fontFamily=Arial;fontSize=12;swimlane;horizontal=1;startSize=30;swimlaneFillColor=#FAFAFA;rounded=1;arcSize=6;collapsible=0;container=1;fontStyle=1;labelBackgroundColor=none;" value="C  Conversation" vertex="1">
+          <mxGeometry height="144" width="220" x="15" y="53" as="geometry" />
+        </mxCell>
+        <mxCell id="conversation_attributes" parent="conversation" style="fontFamily=Arial;fontSize=12;strokeColor=#555555;text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=7;spacingTop=4;whiteSpace=wrap;overflow=hidden;connectable=0;labelBackgroundColor=none;" value="+ conversationId: Integer&#xa;+ customerUserId: String&#xa;+ profileId: Integer&#xa;+ status: ConversationStatus&#xa;+ createdAt: DateTime&#xa;+ lastMessageAt: DateTime [0..1]" vertex="1">
+          <mxGeometry height="113" width="220" y="31" as="geometry" />
+        </mxCell>
+        <mxCell id="swipe" parent="messaging" style="fontFamily=Arial;fontSize=12;swimlane;horizontal=1;startSize=30;swimlaneFillColor=#FAFAFA;rounded=1;arcSize=6;collapsible=0;container=1;fontStyle=1;labelBackgroundColor=none;" value="C  Swipe" vertex="1">
+          <mxGeometry height="110" width="160" x="260" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="swipe_attributes" parent="swipe" style="fontFamily=Arial;fontSize=12;strokeColor=#555555;text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=7;spacingTop=4;whiteSpace=wrap;overflow=hidden;connectable=0;labelBackgroundColor=none;" value="+ swipeId: Integer&#xa;+ customerUserId: String&#xa;+ direction: SwipeDirection&#xa;+ createdAt: DateTime" vertex="1">
+          <mxGeometry height="79" width="160" y="31" as="geometry" />
+        </mxCell>
+        <mxCell id="message" parent="messaging" style="fontFamily=Arial;fontSize=12;swimlane;horizontal=1;startSize=30;swimlaneFillColor=#FAFAFA;rounded=1;arcSize=6;collapsible=0;container=1;fontStyle=1;labelBackgroundColor=none;" value="C  ChatMessage" vertex="1">
+          <mxGeometry height="127" width="220" x="15" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="message_attributes" parent="message" style="fontFamily=Arial;fontSize=12;strokeColor=#555555;text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=7;spacingTop=4;whiteSpace=wrap;overflow=hidden;connectable=0;labelBackgroundColor=none;" value="+ messageId: Integer&#xa;+ senderUserId: String&#xa;+ content: String&#xa;+ sentAt: DateTime&#xa;+ readAt: DateTime [0..1]" vertex="1">
+          <mxGeometry height="96" width="220" y="31" as="geometry" />
+        </mxCell>
+        <mxCell id="reputation" parent="1" style="fontFamily=Arial;fontSize=12;swimlane;horizontal=1;startSize=30;rounded=1;arcSize=8;swimlaneFillColor=#FFF5E7;fontStyle=1;collapsible=0;container=1;labelBackgroundColor=none;" value="Reviews and Reputation" vertex="1">
+          <mxGeometry height="190" width="260" x="1400" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="review" parent="reputation" style="fontFamily=Arial;fontSize=12;swimlane;horizontal=1;startSize=30;swimlaneFillColor=#FAFAFA;rounded=1;arcSize=6;collapsible=0;container=1;fontStyle=1;labelBackgroundColor=none;" value="C  Review" vertex="1">
+          <mxGeometry height="127" width="230" x="15" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="review_attributes" parent="review" style="fontFamily=Arial;fontSize=12;strokeColor=#555555;text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=7;spacingTop=4;whiteSpace=wrap;overflow=hidden;connectable=0;labelBackgroundColor=none;" value="+ reviewId: Integer&#xa;+ customerUserId: String&#xa;+ rating: Integer&#xa;+ comment: String&#xa;+ createdAt: DateTime" vertex="1">
+          <mxGeometry height="96" width="230" y="31" as="geometry" />
+        </mxCell>
+        <mxCell id="enums" parent="1" style="fontFamily=Arial;fontSize=12;swimlane;horizontal=1;startSize=30;rounded=1;arcSize=8;swimlaneFillColor=#F5F5F5;fontStyle=1;collapsible=0;container=1;labelBackgroundColor=none;" value="Enumerations" vertex="1">
+          <mxGeometry height="170" width="750" x="560" y="624" as="geometry" />
+        </mxCell>
+        <mxCell id="convstatus" parent="enums" style="fontFamily=Arial;fontSize=12;swimlane;horizontal=1;startSize=30;swimlaneFillColor=#FAFAFA;rounded=1;arcSize=6;collapsible=0;container=1;fontStyle=1;labelBackgroundColor=none;" value="E  ConversationStatus" vertex="1">
+          <mxGeometry height="93" width="175" x="15" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="convstatus_attributes" parent="convstatus" style="fontFamily=Arial;fontSize=12;strokeColor=#555555;text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=7;spacingTop=4;whiteSpace=wrap;overflow=hidden;connectable=0;labelBackgroundColor=none;" value="ACTIVE&#xa;CLOSED&#xa;BLOCKED" vertex="1">
+          <mxGeometry height="62" width="175" y="31" as="geometry" />
+        </mxCell>
+        <mxCell id="swipedir" parent="enums" style="fontFamily=Arial;fontSize=12;swimlane;horizontal=1;startSize=30;swimlaneFillColor=#FAFAFA;rounded=1;arcSize=6;collapsible=0;container=1;fontStyle=1;labelBackgroundColor=none;" value="E  SwipeDirection" vertex="1">
+          <mxGeometry height="76" width="145" x="210" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="swipedir_attributes" parent="swipedir" style="fontFamily=Arial;fontSize=12;strokeColor=#555555;text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=7;spacingTop=4;whiteSpace=wrap;overflow=hidden;connectable=0;labelBackgroundColor=none;" value="LEFT&#xa;RIGHT" vertex="1">
+          <mxGeometry height="45" width="145" y="31" as="geometry" />
+        </mxCell>
+        <mxCell id="verstatus" parent="enums" style="fontFamily=Arial;fontSize=12;swimlane;horizontal=1;startSize=30;swimlaneFillColor=#FAFAFA;rounded=1;arcSize=6;collapsible=0;container=1;fontStyle=1;labelBackgroundColor=none;" value="E  VerificationStatus" vertex="1">
+          <mxGeometry height="110" width="170" x="375" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="verstatus_attributes" parent="verstatus" style="fontFamily=Arial;fontSize=12;strokeColor=#555555;text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=7;spacingTop=4;whiteSpace=wrap;overflow=hidden;connectable=0;labelBackgroundColor=none;" value="PENDING&#xa;APPROVED&#xa;REJECTED&#xa;SUSPENDED" vertex="1">
+          <mxGeometry height="79" width="170" y="31" as="geometry" />
+        </mxCell>
+        <mxCell id="protype" parent="enums" style="fontFamily=Arial;fontSize=12;swimlane;horizontal=1;startSize=30;swimlaneFillColor=#FAFAFA;rounded=1;arcSize=6;collapsible=0;container=1;fontStyle=1;labelBackgroundColor=none;" value="E  ProfessionalType" vertex="1">
+          <mxGeometry height="76" width="165" x="565" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="protype_attributes" parent="protype" style="fontFamily=Arial;fontSize=12;strokeColor=#555555;text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=7;spacingTop=4;whiteSpace=wrap;overflow=hidden;connectable=0;labelBackgroundColor=none;" value="ELECTRICIAN&#xa;COMPANY" vertex="1">
+          <mxGeometry height="45" width="165" y="31" as="geometry" />
+        </mxCell>
+        <mxCell id="photos" edge="1" parent="1" source="profile" style="fontFamily=Arial;fontSize=12;edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=none;exitX=0.35;exitY=1;entryX=0.5;entryY=0;startArrow=diamond;startFill=1;startSize=12;labelBackgroundColor=none;fontColor=default;" target="photo" value="photos">
+          <mxGeometry relative="1" x="0.3117" y="-11" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="photos_src" connectable="0" parent="photos" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Arial;fontSize=12;labelBackgroundColor=none;" value="1" vertex="1">
+          <mxGeometry relative="1" x="-1" as="geometry">
+            <mxPoint x="18" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="photos_dst" connectable="0" parent="photos" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Arial;fontSize=12;labelBackgroundColor=none;" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="1" as="geometry">
+            <mxPoint x="-18" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="categories" edge="1" parent="1" source="profile" style="fontFamily=Arial;fontSize=12;edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=none;exitX=0;exitY=0.55;entryX=0.5;entryY=0;labelBackgroundColor=none;fontColor=default;" target="category" value="offers">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="categories_src" connectable="0" parent="categories" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Arial;fontSize=12;labelBackgroundColor=none;" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="-1" as="geometry">
+            <mxPoint x="-20" y="-13" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="categories_dst" connectable="0" parent="categories" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Arial;fontSize=12;labelBackgroundColor=none;" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="1" as="geometry">
+            <mxPoint x="-18" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="history" edge="1" parent="1" source="profile" style="fontFamily=Arial;fontSize=12;edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=none;exitX=0.85;exitY=1;entryX=0.5;entryY=0;labelBackgroundColor=none;fontColor=default;" target="verification" value="verification history">
+          <mxGeometry relative="1" x="0.5184" y="10" as="geometry">
+            <mxPoint x="-7" y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="history_src" connectable="0" parent="history" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Arial;fontSize=12;labelBackgroundColor=none;" value="1" vertex="1">
+          <mxGeometry relative="1" x="-1" as="geometry">
+            <mxPoint x="-8" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="history_dst" connectable="0" parent="history" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Arial;fontSize=12;labelBackgroundColor=none;" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="1" as="geometry">
+            <mxPoint x="-18" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="swipes" edge="1" parent="1" source="profile" style="fontFamily=Arial;fontSize=12;edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=none;exitX=0;exitY=0.85;entryX=0.5;entryY=0;labelBackgroundColor=none;fontColor=default;" target="swipe" value="receives">
+          <mxGeometry relative="1" x="-0.0052" y="7" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="swipes_src" connectable="0" parent="swipes" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Arial;fontSize=12;labelBackgroundColor=none;" value="1" vertex="1">
+          <mxGeometry relative="1" x="-1" as="geometry">
+            <mxPoint x="-10" y="7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="swipes_dst" connectable="0" parent="swipes" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Arial;fontSize=12;labelBackgroundColor=none;" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="0.9983" as="geometry">
+            <mxPoint x="-18" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="participation" edge="1" parent="1" source="profile" style="fontFamily=Arial;fontSize=12;edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=none;exitX=0;exitY=0.75;entryX=0.5;entryY=0;labelBackgroundColor=none;fontColor=default;" target="conversation" value="participates in">
+          <mxGeometry relative="1" x="-0.0053" y="-16" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="participation_src" connectable="0" parent="participation" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Arial;fontSize=12;labelBackgroundColor=none;" value="1" vertex="1">
+          <mxGeometry relative="1" x="-1" as="geometry">
+            <mxPoint x="-10" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="participation_dst" connectable="0" parent="participation" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Arial;fontSize=12;labelBackgroundColor=none;" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="1" as="geometry">
+            <mxPoint x="-18" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="messages" edge="1" parent="1" source="conversation" style="fontFamily=Arial;fontSize=12;edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=none;exitX=0.5;exitY=1;entryX=0.5;entryY=0;startArrow=diamond;startFill=1;startSize=12;labelBackgroundColor=none;fontColor=default;" target="message" value="contains">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="messages_src" connectable="0" parent="messages" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Arial;fontSize=12;labelBackgroundColor=none;" value="1" vertex="1">
+          <mxGeometry relative="1" x="-1" as="geometry">
+            <mxPoint x="18" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="messages_dst" connectable="0" parent="messages" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Arial;fontSize=12;labelBackgroundColor=none;" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="1" as="geometry">
+            <mxPoint x="-18" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="reviews" edge="1" parent="1" source="profile" style="fontFamily=Arial;fontSize=12;edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=none;exitX=1;exitY=0.5;entryX=0.5;entryY=0;labelBackgroundColor=none;fontColor=default;" target="review" value="receives">
+          <mxGeometry relative="1" x="-0.0117" y="10" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1015" y="300" />
+              <mxPoint x="1530" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="reviews_src" connectable="0" parent="reviews" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Arial;fontSize=12;labelBackgroundColor=none;" value="1" vertex="1">
+          <mxGeometry relative="1" x="-1" as="geometry">
+            <mxPoint x="5" y="60" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="reviews_dst" connectable="0" parent="reviews" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Arial;fontSize=12;labelBackgroundColor=none;" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="1" as="geometry">
+            <mxPoint x="-18" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LR3OOzV4TavKiQ_zmFGf-2" connectable="0" parent="reviews" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Arial;fontSize=12;labelBackgroundColor=none;" value="1" vertex="1">
+          <mxGeometry relative="1" x="-1" as="geometry">
+            <mxPoint x="15" y="16" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LR3OOzV4TavKiQ_zmFGf-3" connectable="0" parent="reviews" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Arial;fontSize=12;labelBackgroundColor=none;" value="1" vertex="1">
+          <mxGeometry relative="1" x="-1" as="geometry">
+            <mxPoint x="15" y="-60" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="feedback" edge="1" parent="1" source="conversation" style="fontFamily=Arial;fontSize=12;edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=none;exitX=1;exitY=0.8;entryX=0;entryY=0.35;labelBackgroundColor=none;fontColor=default;" target="review" value="feedback">
+          <mxGeometry relative="1" x="0.5749" y="-20" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="280" y="520.2" />
+              <mxPoint x="280" y="810" />
+              <mxPoint x="1380" y="810" />
+              <mxPoint x="1380" y="679.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="feedback_src" connectable="0" parent="feedback" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Arial;fontSize=12;labelBackgroundColor=none;" value="1" vertex="1">
+          <mxGeometry relative="1" x="-1" as="geometry">
+            <mxPoint x="18" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="feedback_dst" connectable="0" parent="feedback" style="edgeLabel;html=0;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Arial;fontSize=12;labelBackgroundColor=none;" value="0..1" vertex="1">
+          <mxGeometry relative="1" x="0.9996" as="geometry">
+            <mxPoint x="-18" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="type_dep" edge="1" parent="1" source="profile" style="fontFamily=Arial;fontSize=12;edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=none;exitX=1;exitY=0.3;entryX=0.5;entryY=0;dashed=1;endArrow=open;endFill=0;labelBackgroundColor=none;fontColor=default;" target="protype" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1015" y="200" />
+              <mxPoint x="1207.5" y="200" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="verification_dep" edge="1" parent="1" source="profile" style="fontFamily=Arial;fontSize=12;edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=none;exitX=1;exitY=0.7;entryX=0.549;entryY=-0.006;dashed=1;endArrow=open;endFill=0;entryDx=0;entryDy=0;entryPerimeter=0;labelBackgroundColor=none;fontColor=default;" target="verstatus" value="">
+          <mxGeometry relative="1" x="0.0135" as="geometry">
+            <Array as="points">
+              <mxPoint x="1015" y="280" />
+              <mxPoint x="1180" y="280" />
+              <mxPoint x="1180" y="600" />
+              <mxPoint x="1030" y="600" />
+              <mxPoint x="1030" y="660" />
+              <mxPoint x="1028.3" y="660" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="swipe_dep" edge="1" parent="1" source="swipe" style="fontFamily=Arial;fontSize=12;edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=none;exitX=0.5;exitY=1;dashed=1;endArrow=open;endFill=0;labelBackgroundColor=none;fontColor=default;" target="swipedir" value="">
+          <mxGeometry relative="1" x="0.1522" as="geometry">
+            <Array as="points">
+              <mxPoint x="360" y="515" />
+              <mxPoint x="360" y="590" />
+              <mxPoint x="850" y="590" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conv_dep" edge="1" parent="1" source="conversation" style="fontFamily=Arial;fontSize=12;edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=none;exitX=1;exitY=0.95;entryX=0.5;entryY=0;dashed=1;endArrow=open;endFill=0;labelBackgroundColor=none;fontColor=default;" target="convstatus" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="285" y="610" />
+              <mxPoint x="710" y="610" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="swipenote" parent="1" style="fontFamily=Arial;fontSize=12;shape=note;size=15;strokeColor=#B6AE7A;whiteSpace=wrap;align=left;verticalAlign=top;spacing=9;labelBackgroundColor=none;" value="LEFT: skip professional.&#xa;RIGHT: create or reopen a conversation.&#xa;Blocked conversations cannot be reopened by swiping." vertex="1">
+          <mxGeometry height="95" width="270" x="505" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="convnote" parent="1" style="fontFamily=Arial;fontSize=12;shape=note;size=15;strokeColor=#B6AE7A;whiteSpace=wrap;align=left;verticalAlign=top;spacing=9;labelBackgroundColor=none;" value="One conversation per customer-professional pair.&#xa;Unique (customerUserId, profileId).&#xa;User IDs reference externally managed identities." vertex="1">
+          <mxGeometry height="90" width="380" x="60" y="830" as="geometry" />
+        </mxCell>
+        <mxCell id="reviewnote" parent="1" style="fontFamily=Arial;fontSize=12;shape=note;size=15;strokeColor=#B6AE7A;whiteSpace=wrap;align=left;verticalAlign=top;spacing=9;labelBackgroundColor=none;" value="Rating between 1 and 5.&#xa;One review per conversation.&#xa;The reviewer is the conversation customer." vertex="1">
+          <mxGeometry height="85" width="290" x="1385" y="835" as="geometry" />
+        </mxCell>
+        <mxCell id="swipe_note" edge="1" parent="1" source="swipe" style="fontFamily=Arial;fontSize=12;edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=none;exitX=1;exitY=0.8;entryX=0;entryY=0.5;dashed=1;endArrow=none;endFill=0;labelBackgroundColor=none;fontColor=default;" target="swipenote" value="">
+          <mxGeometry relative="1" x="-0.0434" as="geometry">
+            <Array as="points">
+              <mxPoint x="490" y="493" />
+              <mxPoint x="490" y="887.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conv_note" edge="1" parent="1" source="conversation" style="fontFamily=Arial;fontSize=12;edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=none;exitX=0;exitY=0.8;entryX=0;entryY=0.5;dashed=1;endArrow=none;endFill=0;labelBackgroundColor=none;fontColor=default;" target="convnote" value="">
+          <mxGeometry relative="1" x="0.0005" as="geometry">
+            <Array as="points">
+              <mxPoint x="10" y="520.2" />
+              <mxPoint x="10" y="875" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="review_note" edge="1" parent="1" source="review" style="fontFamily=Arial;fontSize=12;edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=none;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=1;endArrow=none;endFill=0;labelBackgroundColor=none;fontColor=default;" target="reviewnote" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
