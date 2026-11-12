@@ -1,0 +1,65 @@
+@startuml
+skinparam dpi 150
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam defaultFontSize 12
+skinparam sequenceMessageAlign left
+skinparam ParticipantPadding 20
+skinparam sequence {
+  LifeLineBorderColor #888888
+  LifeLineBackgroundColor #ffffff
+  ArrowColor #000000
+}
+skinparam note {
+  BackgroundColor #fffde0
+  BorderColor #b5b045
+}
+skinparam participant {
+  FontSize 13
+}
+title <size:20>Joining a challenge — synchronous path (Gateway → Eureka → ms4-challenge-service)</size>\n<size:12><color:#555555>Ahmed (household owner, household #12) joins the challenge #3 “Cut 10 % this month” from the web app.</color></size>
+
+participant "**Client app**\nrole HOUSEHOLD_OWNER" as C #f5f5f5
+participant "<color:white>**API Gateway**</color>\n<color:white>:8080</color>" as G #1ba1e2
+participant "**Eureka Server**\n:8761" as E #fad7ac
+participant "**challenges**\nMS4 · :8084" as CH #ffe6cc
+database "**challenge_db**\nMongoDB" as DB #d5e8d4
+
+note over G, DB #fffde0
+**0** · At start-up every service registers in Eureka (heartbeat every 30 s) and keeps a cached copy of the registry.
+end note
+
+C -> G : **1** · POST /api/v1/challenges/3/participations\n{householdId: 12} + Bearer JWT
+activate G
+G -> G : **2** · check the JWT (Keycloak keys, role HOUSEHOLD_OWNER / HOUSEHOLD_MEMBER)\nroute /api/v1/challenges/** → lb://ms4-challenge-service
+G -> E : **3** · where is ms4-challenge-service?
+E --> G : instances (cached registry)
+G -> CH : **4** · forward to one instance (load balancing)
+activate CH
+CH -> CH : **5** · is household 12 in the JWT claim household_ids?\n(MS4 calls no other service: else 403)
+CH -> CH : **6** · business rules: challenge ACTIVE and open?\nalready joined? (else 409)
+CH -> DB : **7** · INSERT participation (JOINED, progressPct = 0)
+DB --> CH : id = p-81
+CH --> G : **8** · 201 Created · Location: /api/v1/participations/p-81
+deactivate CH
+G --> C : 201 Created + ParticipationResponse
+deactivate G
+
+note over C
+**Error cases**
+• 401 / 403 at the gateway: missing token / wrong role
+• 403: household not in the caller’s household_ids claim
+• 404: challenge not found
+• 409: challenge ended / not open, or household already joined
+• 503: no instance of MS4 in Eureka (service stopped)
+end note
+note over DB, CH
+**What to remember**
+• Steps 1 → 8 are **synchronous**: the client waits for every call.
+• Eureka is a **directory, not a proxy**: requests go straight to the chosen instance.
+• MS4 has **no synchronous dependency**: ownership comes from the JWT, like MS3.
+• MS4 stores only **householdId** (an id, no foreign key).
+• The baseline (baselineKWh) and the progress come later, **asynchronously**,
+  from the ConsumptionCalculated events (page //async-communication//).
+end note
+@enduml
