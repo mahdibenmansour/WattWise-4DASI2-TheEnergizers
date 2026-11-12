@@ -1,11 +1,20 @@
-# Discovery Service
+# Discovery Service (Eureka)
 
-Netflix Eureka: registers and discovers all seven services, including FastAPI MS7.
+Service registry: every service registers here, and the gateway and OpenFeign clients find services by name (`lb://...`).
 
 - **Owner:** Farouk
 - **Port:** 8761
-- **Status:** documentation placeholder; implementation pending.
+- **Technology:** Java 17 · Spring Boot 3.5 · Spring Cloud Netflix Eureka Server 2025.0
 
-Add the Spring project, configuration and startup instructions here. Coordinate dependency versions with the Java 17 / Spring Boot 3.3.x services. Keep credentials outside source control.
+## Run it
+
+Start this one first:
+
+```bash
+cd Backend/discovery-service
+./mvnw spring-boot:run
+```
+
+Dashboard: http://localhost:8761 — registered services appear under "Instances currently registered".
 
 See the [root README](../../README.md).

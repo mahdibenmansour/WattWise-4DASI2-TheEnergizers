@@ -1,0 +1,194 @@
+@startuml MS3_Solar_ClassDiagram
+skinparam dpi 150
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 60
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #333333
+  HeaderBackgroundColor #DAE8FC
+}
+skinparam class<<event infra>> {
+  HeaderBackgroundColor #E8E8E8
+  BorderColor #888888
+  FontColor #444444
+}
+skinparam class<<local copy>> {
+  HeaderBackgroundColor #E8F3E0
+  BorderColor #2D7600
+}
+skinparam class<<service>> {
+  HeaderBackgroundColor #F2F2F2
+}
+skinparam class<<listener>> {
+  HeaderBackgroundColor #E8F3E0
+}
+skinparam enum {
+  BackgroundColor #FFFFFF
+  BorderColor #555555
+  HeaderBackgroundColor #FFF2CC
+}
+skinparam note {
+  BackgroundColor #F5F5F5
+  BorderColor #999999
+}
+skinparam package {
+  BorderColor #888888
+  FontStyle bold
+}
+title <size:18><b>MS3 — Solar Panel Management : Class diagram</b></size>
+
+class SolarInstallation {
+  - id : Long
+  - householdId : Long
+  - name : String
+  - installationDate : LocalDate
+  - totalCapacityKWp : Double
+  - inverterCapacityKW : Double
+  - orientation : String
+  - tiltAngle : Double
+  - gridConnected : Boolean
+  - status : InstallationStatus
+  --
+  + registerInstallation() : void
+  + updateInstallation() : void
+  + deactivateInstallation() : void
+  + calculateTotalCapacity() : Double
+}
+
+class SolarPanel {
+  - id : Long
+  - brand : String
+  - model : String
+  - panelType : PanelType
+  - powerRatingW : Double
+  - efficiency : Double
+  - quantity : Integer
+  - installedAt : LocalDate
+  --
+  + addPanel() : void
+  + updatePanel() : void
+  + removePanel() : void
+  + calculateCapacityKWp() : Double
+}
+
+class ProductionRecord {
+  - id : Long
+  - recordDate : LocalDate
+  - producedKWh : Double
+  - selfConsumedKWh : Double
+  - exportedKWh : Double
+  - source : RecordSource
+  - createdAt : LocalDateTime
+  --
+  + recordProduction() : void
+  + updateRecord() : void
+  + validateRecord() : Boolean
+}
+
+class SolarEnergyBalance {
+  - id : Long
+  - periodType : PeriodType
+  - periodStart : LocalDate
+  - periodEnd : LocalDate
+  - totalProducedKWh : Double
+  - totalSelfConsumedKWh : Double
+  - totalExportedKWh : Double
+  - selfConsumptionRate : Double
+  - calculatedAt : LocalDateTime
+  --
+  + calculateBalance() : void
+  + calculateSelfConsumptionRate() : Double
+}
+
+class SolarSavings {
+  - id : Long
+  - tariffRateSnapshotTND : Double
+  - tariffPlanId : Long
+  - avoidedCostTND : Double
+  - exportRevenueTND : Double
+  - totalSavingsTND : Double
+  - calculatedAt : LocalDateTime
+  --
+  + calculateSavings() : Double
+}
+
+class HouseholdRef <<local copy>> {
+  - householdId : Long
+  - active : Boolean
+  - syncedAt : LocalDateTime
+}
+
+class OutboxEvent <<event infra>> {
+  - eventId : UUID
+  - eventType : String
+  - payload : JSON
+  - publishedAt : LocalDateTime [0..1]
+}
+
+class ProcessedEvent <<event infra>> {
+  - eventId : UUID
+  - processedAt : LocalDateTime
+}
+
+enum InstallationStatus {
+  ACTIVE
+  INACTIVE
+  UNDER_MAINTENANCE
+}
+enum PanelType {
+  MONOCRYSTALLINE
+  POLYCRYSTALLINE
+  THIN_FILM
+}
+enum RecordSource {
+  MANUAL
+  INVERTER_IMPORT
+}
+enum PeriodType {
+  DAILY
+  MONTHLY
+  YEARLY
+}
+
+SolarInstallation "1" *-- "1..*" SolarPanel : contains >
+SolarInstallation "1" *-- "0..*" ProductionRecord : produces >
+SolarInstallation "1" *-- "0..*" SolarEnergyBalance : has >
+SolarEnergyBalance "1" -- "0..1" SolarSavings : valued as >
+SolarEnergyBalance ..> ProductionRecord : aggregates
+SolarInstallation ..> HouseholdRef : checks household locally
+ProductionRecord ..> OutboxEvent : SolarProductionRecorded
+
+SolarInstallation --> InstallationStatus
+SolarPanel --> PanelType
+ProductionRecord --> RecordSource
+SolarEnergyBalance --> PeriodType
+
+note top of HouseholdRef
+  Filled from MS1 events (HouseholdCreated,
+  HouseholdDeleted); duplicates skipped with
+  ProcessedEvent. No call to MS1.
+  Ownership comes from the JWT household_ids.
+end note
+
+note right of ProductionRecord
+  <b>Rule:</b> selfConsumedKWh + exportedKWh
+  must not exceed producedKWh.
+end note
+
+note bottom of SolarSavings
+  The rate is fetched from <b>MS2 GET /tariffs/current</b>
+  and stored as a snapshot (rate used at that time).
+  If MS2 is down, the last known rate is reused.
+  avoidedCost = selfConsumedKWh x rate
+end note
+
+note bottom of SolarEnergyBalance
+  On HouseholdDeleted: installations
+  and all their data are deleted.
+end note
+
+@enduml
