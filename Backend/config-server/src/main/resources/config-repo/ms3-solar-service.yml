@@ -1,0 +1,7 @@
+# Settings for MS3 - Solar Panel Management.
+# Each service owner adds a file named <spring.application.name>.yml next to this one.
+wattwise:
+  solar:
+    # Fallback rate (TND/kWh) used only when MS2 GET /tariffs/current is unavailable
+    # and no previous snapshot exists. To be confirmed with MS2.
+    default-tariff-tnd: 0.176
