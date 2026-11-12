@@ -1,0 +1,164 @@
+@startuml
+title
+MS7 - Energy Marketplace
+WattWise TN - Domain Class Diagram
+end title
+
+top to bottom direction
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam roundcorner 10
+skinparam packageStyle rectangle
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam nodesep 30
+skinparam ranksep 40
+hide empty methods
+
+package "Professional Discovery" #EAF5EE {
+  class ProfessionalProfile {
+    + profileId: Integer
+    + ownerUserId: String
+    + name: String
+    + type: ProfessionalType
+    + description: String
+    + phone: String
+    + city: String
+    + governorate: String
+    + latitude: Decimal
+    + longitude: Decimal
+    + serviceRadiusKm: Integer
+    + status: VerificationStatus
+    + createdAt: DateTime
+  }
+
+  class ServiceCategory {
+    + categoryId: Integer
+    + name: String
+    + description: String
+  }
+
+  class ProfilePhoto {
+    + photoId: Integer
+    + imageUrl: String
+    + position: Integer
+  }
+
+  class VerificationRecord {
+    + verificationId: Integer
+    + adminUserId: String
+    + decision: VerificationStatus
+    + reason: String
+    + createdAt: DateTime
+  }
+
+}
+
+package "Swiping and Messaging" #EAF1FF {
+  class Conversation {
+    + conversationId: Integer
+    + customerUserId: String
+    + profileId: Integer
+    + status: ConversationStatus
+    + createdAt: DateTime
+    + lastMessageAt: DateTime [0..1]
+  }
+
+  class Swipe {
+    + swipeId: Integer
+    + customerUserId: String
+    + direction: SwipeDirection
+    + createdAt: DateTime
+  }
+
+  class ChatMessage {
+    + messageId: Integer
+    + senderUserId: String
+    + content: String
+    + sentAt: DateTime
+    + readAt: DateTime [0..1]
+  }
+
+}
+
+package "Reviews and Reputation" #FFF5E7 {
+  class Review {
+    + reviewId: Integer
+    + customerUserId: String
+    + rating: Integer
+    + comment: String
+    + createdAt: DateTime
+  }
+
+}
+
+package "Enumerations" #F5F5F5 {
+  enum ConversationStatus {
+    ACTIVE
+    CLOSED
+    BLOCKED
+  }
+
+  enum SwipeDirection {
+    LEFT
+    RIGHT
+  }
+
+  enum VerificationStatus {
+    PENDING
+    APPROVED
+    REJECTED
+    SUSPENDED
+  }
+
+  enum ProfessionalType {
+    ELECTRICIAN
+    COMPANY
+  }
+
+}
+
+ProfessionalProfile "1" *-- "0..*" ProfilePhoto : photos
+ProfessionalProfile "0..*" -- "0..*" ServiceCategory : offers
+ProfessionalProfile "1" -- "0..*" VerificationRecord : verification history
+ProfessionalProfile "1" -- "0..*" Swipe : receives
+ProfessionalProfile "1" -- "0..*" Conversation : participates in
+Conversation "1" *-- "0..*" ChatMessage : contains
+ProfessionalProfile "1" -- "0..*" Review : receives
+Conversation "1" -- "0..1" Review : feedback
+ProfessionalProfile ..> ProfessionalType
+ProfessionalProfile ..> VerificationStatus
+Swipe ..> SwipeDirection
+Conversation ..> ConversationStatus
+
+' Layout hints approximate the edited draw.io arrangement.
+Conversation -[hidden]right- Swipe
+Swipe -[hidden]right- ServiceCategory
+ServiceCategory -[hidden]right- ProfilePhoto
+ProfilePhoto -[hidden]right- VerificationRecord
+ConversationStatus -[hidden]right- SwipeDirection
+SwipeDirection -[hidden]right- VerificationStatus
+VerificationStatus -[hidden]right- ProfessionalType
+ProfessionalType -[hidden]right- Review
+
+note bottom of Swipe
+  LEFT: skip professional.
+  RIGHT: create or reopen a conversation.
+  Blocked conversations cannot be reopened by swiping.
+end note
+
+note bottom of Conversation
+  One conversation per customer-professional pair.
+  Unique (customerUserId, profileId).
+  User IDs reference externally managed identities.
+end note
+
+note bottom of Review
+  Rating between 1 and 5.
+  One review per conversation.
+  The reviewer is the conversation customer.
+end note
+
+@enduml

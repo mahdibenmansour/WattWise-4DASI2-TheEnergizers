@@ -1,24 +1,35 @@
 # MS7 — Energy Marketplace
 
-Energy marketplace listings, offers and household exchanges.
+Standalone Node.js + NestJS + TypeScript starter, owned by Mahdi, on port **8087**.
+This implementation supersedes the earlier FastAPI placeholder for MS7.
+No database, Keycloak, Eureka or other services are required for this starter.
 
-| Setting | Agreed value |
-|---|---|
-| Owner | Mahdi |
-| Service name | `ms7-marketplace-service` |
-| Port | 8087 |
-| Technology | Python / FastAPI |
-| Database | PostgreSQL `marketplace_db` (exclusive to this service) |
+## Setup and run
 
-## Session 4 handoff
+Install Node.js 22 or newer with npm, then from the repository root:
 
-Documentation placeholder only; no application or database configuration is implemented here yet.
+```bash
+cd Backend/ms7-marketplace-service
+npm ci
+npm run build
+npm start
+```
 
-- Create the project and implement `GET /api/v1/hello`.
-- Add `requirements.txt`, a Dockerfile, built-in OpenAPI at `/docs`, and Eureka registration using `py_eureka_client`.
-- Register with Eureka (:8761), use Config Server (:8888) where applicable, and configure the assigned database.
-- Document API contracts, events and dependency failure behavior before adding business logic.
-- Verify startup, the hello response, OpenAPI and discovery registration; commit from your own account.
-- Mahdi owns the skeleton, implementation and presentation of MS7. Every member also contributes to shared MS1.
+For development with automatic restart, use `npm run start:dev` instead.
+Stop the server with Ctrl+C.
 
-See the [project overview](../../README.md) for the agreed architecture, technologies and team responsibilities.
+## Try the API
+
+- Hello: http://localhost:8087/api/v1/hello
+- Swagger UI: http://localhost:8087/docs
+- OpenAPI JSON: http://localhost:8087/docs-json
+
+In Swagger UI, expand **GET /api/v1/hello**, click **Try it out**, then **Execute**.
+Expect HTTP 200 with:
+
+```json
+{"message":"Hello from Marketplace"}
+```
+
+You can also run `curl http://localhost:8087/api/v1/hello`.
+Marketplace business logic, persistence and platform integrations are future work.
