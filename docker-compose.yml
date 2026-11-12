@@ -1,5 +1,108 @@
-# WattWise TN — infrastructure placeholder, owned by Farouk.
-# Add PostgreSQL, MySQL, MongoDB, RabbitMQ, Keycloak and application containers.
-# Preserve one dedicated database per service; see README.md.
-# This file does not start any infrastructure yet.
-services: {}
+# WattWise TN — local infrastructure (owner: Farouk)
+#
+#   docker compose up -d                      # databases, broker, Keycloak, Zipkin, Eureka, Config, Gateway, MS3
+#   docker compose up -d postgres mysql mongo # only the databases
+#
+# One database per service, never shared. To save memory on a laptop, one server per engine
+# hosts several separate databases (PostgreSQL: household_db, solar_db, marketplace_db).
+# Each owner adds their service below, following the ms3-solar-service example.
+
+services:
+
+  # ---------- Databases ----------
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: wattwise
+      POSTGRES_PASSWORD: wattwise
+    ports: ["5432:5432"]
+    volumes:
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - postgres-data:/var/lib/postgresql/data
+    mem_limit: 512m
+
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: consumption_db
+      MYSQL_USER: wattwise
+      MYSQL_PASSWORD: wattwise
+    ports: ["3306:3306"]
+    volumes: [mysql-data:/var/lib/mysql]
+    mem_limit: 512m
+
+  mongo:
+    image: mongo:7
+    ports: ["27017:27017"]
+    volumes: [mongo-data:/data/db]
+    mem_limit: 512m
+
+  # ---------- Messaging, security, tracing ----------
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    ports: ["5672:5672", "15672:15672"]   # UI: http://localhost:15672 (guest / guest)
+    mem_limit: 384m
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    command: start-dev
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    ports: ["8180:8080"]                  # realm to create: wattwise
+    mem_limit: 768m
+
+  zipkin:
+    image: openzipkin/zipkin:3
+    ports: ["9411:9411"]
+    mem_limit: 384m
+
+  # ---------- Spring Cloud infrastructure ----------
+  discovery-service:
+    build: ./Backend/discovery-service
+    environment:
+      EUREKA_HOSTNAME: discovery-service
+    ports: ["8761:8761"]
+    mem_limit: 384m
+
+  config-server:
+    build: ./Backend/config-server
+    environment:
+      EUREKA_URL: http://discovery-service:8761/eureka
+    ports: ["8888:8888"]
+    depends_on: [discovery-service]
+    mem_limit: 384m
+
+  api-gateway:
+    build: ./Backend/api-gateway
+    environment:
+      EUREKA_URL: http://discovery-service:8761/eureka
+      KEYCLOAK_ISSUER_URI: http://keycloak:8080/realms/wattwise
+      SECURITY_ENABLED: "false"
+    ports: ["8080:8080"]
+    depends_on: [discovery-service, config-server]
+    mem_limit: 384m
+
+  # ---------- Business microservices ----------
+  ms3-solar-service:
+    build: ./Backend/ms3-solar-service
+    environment:
+      SPRING_PROFILES_ACTIVE: db
+      EUREKA_URL: http://discovery-service:8761/eureka
+      CONFIG_SERVER_URL: http://config-server:8888
+      DB_URL: jdbc:postgresql://postgres:5432/solar_db
+      DB_USER: wattwise
+      DB_PASSWORD: wattwise
+    ports: ["8083:8083"]
+    depends_on: [postgres, discovery-service, config-server]
+    mem_limit: 512m
+
+  # TODO (owners): add ms1-household-service (8081), ms2-consumption-service (8082),
+  # ms4-challenge-service (8084), ms5-optimization-service (8085),
+  # ms6-outage-service (8086) and ms7-marketplace-service (8087) the same way.
+
+volumes:
+  postgres-data:
+  mysql-data:
+  mongo-data:
