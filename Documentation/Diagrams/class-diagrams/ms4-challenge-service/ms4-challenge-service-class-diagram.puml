@@ -1,0 +1,136 @@
+@startuml
+title MS4 - Energy Challenges & Rewards
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam dpi 150
+skinparam nodesep 60
+skinparam ranksep 70
+hide empty members
+
+enum ChallengeType {
+  REDUCTION_PERCENT
+  PEAK_HOUR_AVOIDANCE
+  BELOW_THRESHOLD
+}
+enum ChallengeStatus {
+  UPCOMING
+  ACTIVE
+  ENDED
+}
+enum ParticipationStatus {
+  JOINED
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  ABANDONED
+}
+
+class ConsumptionEventListener <<Listener>> {
+  +onConsumptionCalculated(event) : void
+}
+
+class ChallengeService <<Service>> {
+  +createChallenge(data) : Challenge
+  +updateChallenge(id, data) : Challenge
+  +getActiveChallenges() : List<Challenge>
+  +closeExpiredChallenges() : void
+}
+class ParticipationService <<Service>> {
+  +joinChallenge(challengeId, householdId) : Participation
+  +updateProgress(householdId, consumedKWh) : void
+  +completeChallenge(participationId) : void
+  +abandonChallenge(participationId) : void
+  +getHouseholdParticipations(householdId) : List<Participation>
+}
+class RewardService <<Service>> {
+  +awardPoints(participationId) : int
+  +evaluateBadges(householdId) : List<EarnedBadge>
+  +getHouseholdBadges(householdId) : List<EarnedBadge>
+}
+class LeaderboardService <<Service>> {
+  +getLeaderboard(limit) : List<LeaderboardEntry>
+  +getHouseholdRank(householdId) : int
+  +recalculateRanks() : void
+}
+
+class Challenge <<Entity>> {
+  -id : Long
+  -title : String
+  -description : String
+  -type : ChallengeType
+  -targetReductionPct : Double
+  -startDate : LocalDate
+  -endDate : LocalDate
+  -status : ChallengeStatus
+  +activate() : void
+  +close() : void
+  +isOpenForJoining() : Boolean
+}
+class Participation <<Entity>> {
+  -id : Long
+  -householdId : Long
+  -baselineKWh : Double
+  -currentKWh : Double
+  -progressPct : Double
+  -pointsEarned : Integer
+  -joinedAt : LocalDateTime
+  -completedAt : LocalDateTime
+  -status : ParticipationStatus
+  +updateProgress(consumedKWh) : void
+  +complete() : void
+  +abandon() : void
+}
+class Reward <<Entity>> {
+  -id : Long
+  -name : String
+  -description : String
+  -points : Integer
+}
+class Badge <<Entity>> {
+  -id : Long
+  -name : String
+  -criteria : String
+  -requiredPoints : Integer
+  -iconUrl : String
+  +isEarnedBy(totalPoints) : Boolean
+}
+class EarnedBadge <<Entity>> {
+  -id : Long
+  -householdId : Long
+  -earnedAt : LocalDateTime
+}
+class LeaderboardEntry <<Entity>> {
+  -id : Long
+  -householdId : Long
+  -totalPoints : Integer
+  -rank : Integer
+  -lastUpdatedAt : LocalDateTime
+  +addPoints(points) : void
+  +updateRank(rank) : void
+}
+
+Challenge "1" *-- "0..*" Participation : has
+Reward "1" <-- "0..*" Challenge : grants
+Badge "1" <-- "0..*" EarnedBadge : of
+Participation "0..*" --> "1" LeaderboardEntry : adds points to
+
+Challenge --> ChallengeStatus
+Challenge --> ChallengeType
+Participation --> ParticipationStatus
+
+ConsumptionEventListener ..> ParticipationService : forwards consumption
+ChallengeService ..> Challenge : manages
+ParticipationService ..> Participation : manages
+ParticipationService ..> RewardService : on completion
+RewardService ..> Reward : reads points
+RewardService ..> Badge : evaluates
+RewardService ..> EarnedBadge : creates
+RewardService ..> LeaderboardEntry : updates
+LeaderboardService ..> LeaderboardEntry : ranks
+
+note bottom of Participation
+  householdId references MS1 (id only, no foreign key).
+  baselineKWh and consumption come from MS2 via
+  the ConsumptionCalculated event (RabbitMQ).
+end note
+@enduml

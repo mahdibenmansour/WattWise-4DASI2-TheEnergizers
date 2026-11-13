@@ -1,0 +1,174 @@
+@startuml WattWise_TN_Architecture
+' WattWise TN - Global microservices architecture (MS7 = Energy Service Marketplace)
+left to right direction
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam ArrowThickness 1.6
+skinparam nodesep 40
+skinparam ranksep 70
+skinparam rectangle {
+  RoundCorner 12
+  BorderColor #333333
+  BackgroundColor #FFFFFF
+}
+skinparam rectangle<<SpringBoot>> {
+  BorderColor #333333
+  BackgroundColor #FFFFFF
+  StereotypeFontColor #4E8F2A
+}
+skinparam rectangle<<NodeJS>> {
+  BorderColor #3C873A
+  BorderThickness 2
+  BackgroundColor #FFFFFF
+  StereotypeFontColor #3C873A
+}
+skinparam rectangle<<infra>> {
+  BackgroundColor #FFD9A8
+  BorderColor #555555
+  StereotypeFontColor #555555
+}
+skinparam rectangle<<gateway>> {
+  BackgroundColor #1BA1E2
+  FontColor #FFFFFF
+  BorderColor #10739E
+  StereotypeFontColor #FFFFFF
+}
+skinparam queue {
+  BackgroundColor #FFFFFF
+  BorderColor #333333
+}
+skinparam database {
+  BorderColor #555555
+}
+skinparam actor {
+  BackgroundColor #FFFFFF
+  BorderColor #333333
+}
+skinparam package {
+  BorderColor #333333
+  FontSize 14
+  FontStyle bold
+}
+skinparam legend {
+  BackgroundColor #FFFFFF
+  BorderColor #999999
+}
+
+title <size:20><b>WattWise TN — Global microservices architecture</b></size>
+
+' ===================== PUBLIC NETWORK =====================
+package "Public network — Client side" as PUBLIC {
+  rectangle "<b>Web client</b>\n<i>framework TBD</i>\nweb + mobile" as WEB
+  actor "Users\n(visitor, registered user,\nhousehold member / owner,\napproved electrician, admin)" as USERS
+}
+
+
+' ===================== PRIVATE NETWORK =====================
+package "Private network — Backend side" as PRIVATE {
+
+  rectangle "<b>API Gateway</b>\n:8080\n[docker]" <<gateway>> as GW
+  rectangle "<b>Identity provider</b>\n(Keycloak)\n[docker]" <<infra>> as KC
+
+  package "Business microservices (docker)" as BIZ {
+
+    rectangle "<b>MS1: User, Household & Meter Management</b>\n<color:#C0392B><b>SHARED</b></color>\n:8081" <<SpringBoot>> as MS1
+    database "PostgreSQL\nhousehold_db" as DB1 #DAE8FC
+
+    rectangle "<b>MS2: Consumption & Bill Prediction</b>\n:8082" <<SpringBoot>> as MS2
+    database "MySQL\nconsumption_db" as DB2 #FFE6CC
+
+    rectangle "<b>MS3: Solar Panel Management</b>\n:8083" <<SpringBoot>> as MS3
+    database "PostgreSQL\nsolar_db" as DB3 #DAE8FC
+
+    rectangle "<b>MS4: Energy Challenges & Rewards</b>\n:8084" <<SpringBoot>> as MS4
+    database "MongoDB\nchallenge_db" as DB4 #D5E8D4
+
+    rectangle "<b>MS5: Smart Energy Assistant</b>\n:8085" <<SpringBoot>> as MS5
+    database "MongoDB\noptimization_db" as DB5 #D5E8D4
+
+    rectangle "<b>MS6: Power Cut Reporting</b>\n:8086" <<SpringBoot>> as MS6
+    database "MongoDB\noutage_db" as DB6 #D5E8D4
+
+    rectangle "<b>MS7: Energy Service Marketplace</b>\n<color:#3C873A><b>INDIVIDUAL</b></color>\n:8087" <<NodeJS>> as MS7
+    database "PostgreSQL\nmarketplace_db" as DB7 #DAE8FC
+  }
+
+  queue "<b>RabbitMQ</b>\nMessage broker\n(topic exchange wattwise.events)\n[docker]" as MQ #FF6A00;text:white
+
+  rectangle "<b>Eureka server</b>\n:8761\n[docker]" <<infra>> as EUREKA
+  rectangle "<b>Config server</b>\n:8888\n[docker]" <<infra>> as CONFIG
+  rectangle "<b>Zipkin</b>\n:9411 tracing\n[docker]" <<infra>> as ZIPKIN
+  rectangle "<b>GitHub</b>\nconfig repo" as GITHUB #24292E;text:white
+  rectangle "<b>docker-compose.yml</b>\nPostgreSQL · MySQL · MongoDB\nRabbitMQ · Keycloak · services" as COMPOSE #E8F4FD
+}
+
+' ---------- Client → Gateway ----------
+USERS -[#000000,dashed]-> WEB : HTTPS
+WEB -[#000000,dashed]-> GW : REST + JWT
+
+' ---------- Gateway → Keycloak ----------
+GW -[#C0392B,dashed]-> KC : validate JWT (OIDC)
+
+' ---------- HTTP routed by the API Gateway (red) ----------
+GW -[#C0392B,dashed]-> MS1 : /households
+GW -[#C0392B,dashed]-> MS2 : /consumption
+GW -[#C0392B,dashed]-> MS3 : /solar
+GW -[#C0392B,dashed]-> MS4 : /challenges
+GW -[#C0392B,dashed]-> MS5 : /assistant
+GW -[#C0392B,dashed]-> MS6 : /outages
+GW -[#C0392B,dashed]-> MS7 : /marketplace
+
+' ---------- Database per service ----------
+MS1 -- DB1
+MS2 -- DB2
+MS3 -- DB3
+MS4 -- DB4
+MS5 -- DB5
+MS6 -- DB6
+MS7 -- DB7
+
+' ---------- Synchronous calls: OpenFeign + circuit breaker (blue) ----------
+' No service calls MS1: IDs arrive by events and the JWT household_ids claim
+MS5 -[#1F6FB2,dashed]-> MS2 : forecast & tariff
+MS3 -[#1F6FB2,dashed]-> MS2 : current tariff
+MS7 -[#1F6FB2,dotted]-> MS3 : <i>(display only)</i>\ninstallation
+MS7 -[#1F6FB2,dotted]-> MS5 : <i>(display only)</i>\nrecommendation
+MS7 -[#1F6FB2,dotted]-> MS2 : <i>(optional)</i>\nconsumption context
+MS7 -[#1F6FB2,dotted]-> MS6 : <i>(optional)</i>\noutage context
+
+' ---------- Asynchronous events: RabbitMQ (green) ----------
+MS1 -[#2D7D0F,dashed]-> MQ : HouseholdCreated\nMeterRegistered\nApplianceAdded\nHouseholdDeleted
+MS2 -[#2D7D0F,dashed]-> MQ : ConsumptionCalculated
+MS3 -[#2D7D0F,dashed]-> MQ : SolarProductionRecorded
+MS6 -[#2D7D0F,dashed]-> MQ : OutageIncidentUpdated
+MS7 -[#2D7D0F,dotted]-> MQ : <i>(optional)</i>\nServiceCompleted
+
+MQ -[#2D7D0F,dashed]-> MS2 : MeterRegistered\nHouseholdDeleted
+MQ -[#2D7D0F,dashed]-> MS3 : HouseholdCreated\nHouseholdDeleted
+MQ -[#2D7D0F,dashed]-> MS4 : ConsumptionCalculated\nHouseholdDeleted
+MQ -[#2D7D0F,dashed]-> MS5 : ApplianceAdded\nConsumptionCalculated\nSolarProductionRecorded\nOutageIncidentUpdated\nServiceCompleted\nHouseholdDeleted
+MQ -[#2D7D0F,dashed]-> MS6 : HouseholdDeleted
+MQ -[#2D7D0F,dashed]-> MS7 : ApplianceAdded\nHouseholdDeleted
+
+' ---------- Platform services ----------
+BIZ -[#333333,dashed]-> EUREKA : register / discover (lb://)
+GW -[#333333,dashed]-> EUREKA
+CONFIG -[#333333,dashed]-> BIZ : centralised config
+CONFIG -[#333333,dashed]-> EUREKA
+CONFIG <-[#333333]- GITHUB
+BIZ -[#333333,dashed]-> ZIPKIN : traces
+
+legend right
+  |= Arrow |= Meaning |
+  | <color:#C0392B><b>- - ></b></color> | HTTP routed by the API Gateway (public entry) |
+  | <color:#1F6FB2><b>- - ></b></color> | Synchronous call — OpenFeign + circuit breaker |
+  | <color:#2D7D0F><b>- - ></b></color> | Asynchronous event — RabbitMQ |
+  | <b>· · ·></b> | Optional or display-only |
+  | | Every service validates the JWT and forwards it on Feign calls |
+  | | Events: eventId envelope, outbox, duplicates skipped |
+  | <color:#4E8F2A><<SpringBoot>></color> | Spring Boot service |
+  | <color:#3C873A><<NodeJS>></color> | Node.js service |
+endlegend
+
+@enduml
